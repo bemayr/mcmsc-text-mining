@@ -1,0 +1,118 @@
+enterprise information systems 1
+mathematics - algebra
+scripting and content management systmes
+proteomics
+audio/video-technologies
+image processing in medicine and biology
+multimedia-programming for the web
+virtual and augmented reality in medicine
+distributed and parallel software systems
+man: histology and anatomy
+genetics
+software project engineering: scalable process models
+software project engineering 2: scalable process models
+statistical methods
+software development with modern platforms
+software patterns
+network operating systems and virtualization
+elective spezialisation: ambient assisted living
+mathematics: analysis
+data modelling
+development aspects ? software quality
+elective spezialisation: heuristic methods in evidence based medicine
+biochemistry
+hypermedia programming 2
+component-oriented software development
+computer-assisted therapy
+information management
+machine learning
+advertising and marketing
+digital media technologies 2
+pre-press technology
+software development with classical languages
+foundations of procedural programming
+data modelling and database design
+algorithms and data structures
+video design
+operating systems
+operating systems and networks
+introdution to programming
+law
+3d-design
+network technology
+machine learning and data mining
+mathematics 1
+mathematics: algebra
+mathematics 2
+medical sensorics
+man: pathology
+bioinformatics algorithms part 1:
+development processes ? modern models and methodologies
+man: physiology
+introduction to informatics and computer architecture
+object-oriented programming
+mathematics - statistics
+basics of statistics
+logical and formal foundations of informatics
+relational databases and sql
+software libraries
+object-oriented programming
+introduction into algorithms and data structures
+information systems in healthcare
+biological and chemical basics
+the health system
+psychological and sociological foundations of media
+media theory
+enterprise application integration
+biosignal processing
+heuristic methods
+biolaboratory
+software project engineering: team-oriented software development
+imaging modalities in biology and medicine
+web architectures and frameworks
+it law
+physical basics of biomedicine
+software development with classic languages
+knowledge engineering
+business administration
+media and copyright law
+advanced algorithms and data structures
+computer graphics 1
+databases basics of modern database systems
+advanced algorithms and data structures 
+applied software techniques
+software development: service engineering 
+hypermedia programming 1 
+software development in open environments 
+basics of web design 
+tools in bioinformatics 
+conceptual design brainstorming and planning
+applied mathematics for information security 
+multivariate statistics 
+bioethics 
+software development and enterprise technologies 
+xml 
+business software 
+elective spezialisation: augmented reality 
+digital media technologies 1
+introduction to software development 
+numerical methods 
+elective spezialisation: genetics in medical science 
+elective spezialisation: genominformatics 
+elective spezialisation: molecular pathology 
+parallel computing 
+introduction to computer science 
+software development with modern platforms 
+introduction to cultural studies
+pattern recognition in biological and medical sciences 
+elective spezialisation: selected topics systembiology 
+database system
+e business 
+elementary algorithms and data structures 
+integrated care process 
+software project engineering 1: team-oriented software development
+fundamentals of business administration
+elective digital image processing 
+modelling and simulation 
+elective spezialisation: molecular modelling 
+fundamentals of information technology
