@@ -1,0 +1,87 @@
+---
+title: "Exercise 1 - Web Semantic Technologies"
+author: "Stefan Haböck & Bernhard Mayr"
+date: "13 11 2021"
+output: html_document
+---
+
+# Assignment 1: Text Pre-Processing & Clustering
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r dependencies, echo = T, results = 'hide', warning=FALSE}
+library(tm)
+library(cluster)
+library(factoextra)
+library(proxy)
+library(dplyr)
+```
+
+## Loading Data
+```{r data loading}
+loaded_lectures <- read.table("./lectures.txt", sep="\t", header=TRUE, strip.white=TRUE) %>%
+  tibble::as_tibble() %>%
+  select(doc_id = ID, text = Description, title = Title) %>%
+  DataframeSource() %>%
+  VCorpus()
+```
+
+```{r transformations}
+prepared_lectures <- loaded_lectures %>%
+  tm_map(content_transformer(tolower)) %>%
+  tm_map(removeWords, stopwords::stopwords("english")) %>%
+  tm_map(stemDocument)
+```
+
+```{r matrices}
+dtm <- DocumentTermMatrix(prepared_lectures)
+dtm.tfidf <- dtm %>%
+  weightTfIdf() %>%
+  removeSparseTerms(0.99)
+
+tfidf.matrix <- as.matrix(dtm.tfidf)
+dist.matrix = dist(tfidf.matrix, method = "cosine")
+```
+
+```{r clustering}
+truth.K = 8
+clustering.kmeans <- kmeans(tfidf.matrix, truth.K)
+clustering.hierarchical <- hclust(dist.matrix, method = "ward.D2")
+
+master.cluster <- clustering.kmeans$cluster 
+slave.hierarchical <- cutree(clustering.hierarchical, k = truth.K)
+```
+
+```{r plotting, warning=FALSE}
+# Silhouette Plot
+kmm <- kmeans(tfidf.matrix, truth.K)
+D <- daisy(tfidf.matrix, metric = "gower")
+plot(silhouette(kmm$cluster, D), col=1:truth.K, border=NA)
+
+# Cluster Dendrogram
+plot(clustering.hierarchical, hang = -1)
+rect.hclust(clustering.hierarchical, k = truth.K, border = "red")
+```
+
+```{r clustered plotting}
+points <- cmdscale(dist.matrix, k = 2) 
+palette <- colorspace::diverge_hcl(truth.K) # Creating a color palette 
+previous.par <- par(mfrow=c(2,2), mar = rep(1.5, 4)) 
+ 
+plot(points, main = 'K-Means clustering', col = as.factor(master.cluster), 
+     mai = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), 
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab = '') 
+plot(points, main = 'Hierarchical clustering', col = as.factor(slave.hierarchical), 
+     mai = c(0, 0, 0, 0), mar = c(0, 0, 0, 0),  
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab = '')
+
+par(previous.par) # recovering the original plot space parameters
+```
+
+
+## Resources
+- https://mran.microsoft.com/snapshot/2018-03-30/web/packages/tm/vignettes/tm.pdf
+- https://medium.com/@SAPCAI/text-clustering-with-r-an-introduction-for-data-scientists-c406e7454e76
+- https://books.psychstat.org/textmining/cluster-analysis.html
