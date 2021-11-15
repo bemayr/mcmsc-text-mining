@@ -1,25 +1,29 @@
 ---
-title: "Exercise 1 - Web Semantic Technologies"
+title: "Assignment 1: Text Pre-Processing & Clustering"
 author: "Stefan Haböck & Bernhard Mayr"
-date: "13 11 2021"
+date: "15.11.2021"
 output: html_document
 ---
-
-# Assignment 1: Text Pre-Processing & Clustering
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Dependencies
 ```{r dependencies, echo = T, results = 'hide', warning=FALSE}
 library(tm)
 library(cluster)
 library(factoextra)
 library(proxy)
 library(dplyr)
+library(purrr)
 ```
 
 ## Loading Data
+- `strip.white=TRUE` automatically trims the document contents
+- `tibble` is the newer DataFrame alternative
+- `select(...)` prepares the data for the `tm`-package
+
 ```{r data loading}
 loaded_lectures <- read.table("./lectures.txt", sep="\t", header=TRUE, strip.white=TRUE) %>%
   tibble::as_tibble() %>%
@@ -28,12 +32,19 @@ loaded_lectures <- read.table("./lectures.txt", sep="\t", header=TRUE, strip.whi
   VCorpus()
 ```
 
+## Data Transformation
+- first transform the words to lowercase for more equality and because our clustering approach does not differentiate between uppercase and lowercase words
+- then apply stopword removal
+- and then stem the words
+
 ```{r transformations}
 prepared_lectures <- loaded_lectures %>%
   tm_map(content_transformer(tolower)) %>%
   tm_map(removeWords, stopwords::stopwords("english")) %>%
   tm_map(stemDocument)
 ```
+
+## 
 
 ```{r matrices}
 dtm <- DocumentTermMatrix(prepared_lectures)
@@ -80,8 +91,19 @@ plot(points, main = 'Hierarchical clustering', col = as.factor(slave.hierarchica
 par(previous.par) # recovering the original plot space parameters
 ```
 
+## Exercise Answers
+- **3c:** Use different values for the number of clusters k. Have a look at the documents
+combined to a cluster. Which k works best?
+- **3d:** Use different distance measurements combined with different values for k. Which
+distance works best (with which cluster size)?
+- **3e:** Perform various runs. Does the result look similar? Does changing the number of
+iterations have any effect?
+- **4e:** Test various distance measurements and different linkage structures. Which work
+best? Can you see any peculiarities of the linkage methods?
+- **5a:** Use tfidf instead of term occurrence for the TtD. Does it improve the results?
 
 ## Resources
 - https://mran.microsoft.com/snapshot/2018-03-30/web/packages/tm/vignettes/tm.pdf
+- https://cran.r-project.org/web/packages/tm/tm.pdf
 - https://medium.com/@SAPCAI/text-clustering-with-r-an-introduction-for-data-scientists-c406e7454e76
 - https://books.psychstat.org/textmining/cluster-analysis.html

@@ -6,7 +6,7 @@ df <- USArrests
 
 require(cluster)
 
-basepath <- "D:\\code\\fh-hagenberg\\mc-msc\\web-semantic-technologies\\exercise1\\"
+basepath <- "D:\\code\\fh-hagenberg\\mc-msc\\web-semantic-technologies\\exercise1\\bernhard"
 
 ttd <- read.csv(paste(basepath, "ttd.csv", sep = ""), header=FALSE, sep="\t")
 titles <- read.csv(paste(basepath, "titles.txt", sep = ""), header=FALSE)
