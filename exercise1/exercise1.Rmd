@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Dependencies
-```{r dependencies, echo = T, results = 'hide', warning=FALSE}
+```{r dependencies, warning=FALSE, message=FALSE}
 library(tm)
 library(cluster)
 library(factoextra)
@@ -44,7 +44,10 @@ prepared_lectures <- loaded_lectures %>%
   tm_map(stemDocument)
 ```
 
-## 
+## Document Term Matrix Creation
+- first the TFiDF-Matrix is generated using R's `tm`-package
+- then the sparse terms are removed (this reduces the number of terms by 1/5, but keeps nearly all information)
+- now the distance matrix is calculated based on the euclidean distance measurement
 
 ```{r matrices}
 dtm <- DocumentTermMatrix(prepared_lectures)
@@ -56,6 +59,10 @@ tfidf.matrix <- as.matrix(dtm.tfidf)
 dist.matrix = dist(tfidf.matrix, method = "cosine")
 ```
 
+## Clustering
+- kmeans clustering is calculated based on a K of 8 clusters
+- hierarchical clustering is calculated based on the `ward.d2` method
+
 ```{r clustering}
 truth.K = 8
 clustering.kmeans <- kmeans(tfidf.matrix, truth.K)
@@ -64,6 +71,8 @@ clustering.hierarchical <- hclust(dist.matrix, method = "ward.D2")
 master.cluster <- clustering.kmeans$cluster 
 slave.hierarchical <- cutree(clustering.hierarchical, k = truth.K)
 ```
+
+## Silhouette and Dendrogram plot
 
 ```{r plotting, warning=FALSE}
 # Silhouette Plot
@@ -76,10 +85,13 @@ plot(clustering.hierarchical, hang = -1)
 rect.hclust(clustering.hierarchical, k = truth.K, border = "red")
 ```
 
+## Cluster Comparison plot
+- taken from [Text Clustering with R: an Introduction for Data Scientists](https://medium.com/@SAPCAI/text-clustering-with-r-an-introduction-for-data-scientists-c406e7454e76)
+
 ```{r clustered plotting}
 points <- cmdscale(dist.matrix, k = 2) 
 palette <- colorspace::diverge_hcl(truth.K) # Creating a color palette 
-previous.par <- par(mfrow=c(2,2), mar = rep(1.5, 4)) 
+previous.par <- par(mfrow=c(2,1), mar = rep(1.5, 4)) 
  
 plot(points, main = 'K-Means clustering', col = as.factor(master.cluster), 
      mai = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), 
@@ -94,13 +106,18 @@ par(previous.par) # recovering the original plot space parameters
 ## Exercise Answers
 - **3c:** Use different values for the number of clusters k. Have a look at the documents
 combined to a cluster. Which k works best?
+  - after trying some values for k, we decided that a cluster amount of 8 worked pretty well
 - **3d:** Use different distance measurements combined with different values for k. Which
 distance works best (with which cluster size)?
+  - combinig different cluster sizes and distance measurements, we came to the conclusion that *cosine* worked way better than *manhattan* and *euclidean*, given our k of 8
 - **3e:** Perform various runs. Does the result look similar? Does changing the number of
 iterations have any effect?
+  - the results look different, especially for the silhouette plot, this stems from the fact, that the first members of the clusters are choosen randomly
 - **4e:** Test various distance measurements and different linkage structures. Which work
 best? Can you see any peculiarities of the linkage methods?
+  - we tried some of the linkage methods and evaluated them based on the distribution of the cluster size, here *ward.d2* clearly worked the best
 - **5a:** Use tfidf instead of term occurrence for the TtD. Does it improve the results?
+  - TFiDF combined with dropping sparse terms really improved classification in terms of creating cohesive and equally distributed clusters
 
 ## Resources
 - https://mran.microsoft.com/snapshot/2018-03-30/web/packages/tm/vignettes/tm.pdf
