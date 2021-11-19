@@ -1,7 +1,7 @@
 ---
-title: "Assignment 1: Text Pre-Processing & Clustering"
+title: 'Assignment 1: Text Pre-Processing & Clustering'
 author: "Stefan Haböck & Bernhard Mayr"
-date: "15.11.2021"
+date: "19.11.2021"
 output: html_document
 ---
 
@@ -17,6 +17,8 @@ library(factoextra)
 library(proxy)
 library(dplyr)
 library(purrr)
+library(NLP)
+library(ggplot2)
 ```
 
 ## Loading Data
@@ -83,6 +85,22 @@ plot(silhouette(kmm$cluster, D), col=1:truth.K, border=NA)
 # Cluster Dendrogram
 plot(clustering.hierarchical, hang = -1)
 rect.hclust(clustering.hierarchical, k = truth.K, border = "red")
+```
+
+## Title and Index mapping
+- the titles are mapped to the chart's index data to provide a better understanding of how the data has been clustered
+```{r data mapping}
+#get titles
+help("map")
+titles = map(as.list(prepared_lectures), "meta.id")
+titles <- names(titles)
+# map the titles to the cluster number
+kmm_matrix <- cbind(titles, kmm$cluster)
+# sort the data based on the cluster numbers
+kmm_matrix <- kmm_matrix[order(kmm_matrix[,2]),]
+
+# map the histogram data to the index numbers of the diagram
+hist_matrix <- cbind(titles[clustering.hierarchical$order], clustering.hierarchical$order)
 ```
 
 ## Cluster Comparison plot
