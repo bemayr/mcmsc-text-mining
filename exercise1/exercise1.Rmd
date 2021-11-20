@@ -91,7 +91,6 @@ rect.hclust(clustering.hierarchical, k = truth.K, border = "red")
 - the titles are mapped to the chart's index data to provide a better understanding of how the data has been clustered
 ```{r data mapping}
 #get titles
-help("map")
 titles = map(as.list(prepared_lectures), "meta.id")
 titles <- names(titles)
 # map the titles to the cluster number
