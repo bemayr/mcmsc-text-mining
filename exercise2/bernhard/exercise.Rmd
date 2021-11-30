@@ -12,22 +12,78 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Dependencies
 ```{r dependencies, warning=FALSE, message=FALSE}
 library(dplyr)
+library(lolR)
+library(class)
 ```
 
-```{r data}
-ctd <- read.table("./CtD.csv", sep=";", header=TRUE, strip.white=TRUE) %>%
-  tibble::as_tibble()
-ttd <- read.table("./ttd.csv", sep=",", header=FALSE, strip.white=TRUE) %>%
-  tibble::as_tibble()
+```{r helper functions}
+printModelResults <- function(predict, actual_labels){
+  precision <- sum(predict & actual_labels) / sum(predict)
+  recall <- sum(predict & actual_labels) / sum(actual_labels)
+  fmeasure <- 2 * precision * recall / (precision + recall)
 
-names(ctd) <- c("lectureName", "isTechnology", "isInterdisciplinary", "isMedia", "isBiology")
+  cat('precision:  ')
+  cat(precision * 100)
+  cat('%')
+  cat('\n')
 
-data <- bind_cols(ctd, ttd)
+  cat('recall:     ')
+  cat(recall * 100)
+  cat('%')
+  cat('\n')
+
+  cat('f-measure:  ')
+  cat(fmeasure * 100)
+  cat('%')
+  cat('\n')
+}
 ```
 
-```{r split}
-trainingData = .7 # 70% Training Data / 30% Test Data
-dt = sort(sample(nrow(data), nrow(data) * trainingData))
-train <- data[dt,]
-test <- data[-dt,]
+```{r data loading}
+data.ctd <- read.table("./CtD.csv", sep=";", header=TRUE, strip.white=TRUE) %>%
+  tibble::as_tibble()
+data.ttd <- read.table("./ttd.csv", sep=",", header=FALSE, strip.white=TRUE) %>%
+  tibble::as_tibble()
+
+names(data.ctd) <- c("lectureName", "isTechnology", "isInterdisciplinary", "isMedia", "isBiology")
+
+data.raw <- bind_cols(data.ctd, data.ttd)
+```
+
+```{r data preparation}
+# Test Train Split
+data.splitFactor = .7 # 70% Training Data / 30% Test Data
+data.randomization = sort(sample(nrow(data.raw), nrow(data.raw) * data.splitFactor))
+data.train <- data.raw[data.randomization,]
+data.test <- data.raw[-data.randomization,]
+
+# Training Data
+train.features = data.train %>% select(6:ncol(data.train))
+train.labels = data.train$isTechnology
+
+# Test Data
+test.data = data.test %>% select(6:ncol(data.test))
+test.expected = data.test$isTechnology
+```
+
+```{r rocchio}
+model.rocchio <- lol.classify.nearestCentroid(train.features, train.labels)
+result.rocchio <- predict(model, test.data)
+
+printModelResults(result.rocchio, test.expected)
+```
+
+```{r knn}
+result.knn3 <- knn(train.features, test.data, cl=train.labels, k=3)
+printModelResults(as.numeric(as.character(result.knn3)), test.expected)
+
+result.knn5 <- knn(train.features, test.data, cl=train.labels, k=5)
+printModelResults(as.numeric(as.character(result.knn5)), test.expected)
+
+result.knn7 <- knn(train.features, test.data, cl=train.labels, k=7)
+printModelResults(as.numeric(as.character(result.knn7)), test.expected)
+```
+
+```{r naïve bayes}
+
 ```
