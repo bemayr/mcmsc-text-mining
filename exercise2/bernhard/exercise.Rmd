@@ -1,0 +1,33 @@
+---
+title: "Classification"
+author: "Stefan Haböck & Bernhard Mayr"
+date: "30 11 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Dependencies
+```{r dependencies, warning=FALSE, message=FALSE}
+library(dplyr)
+```
+
+```{r data}
+ctd <- read.table("./CtD.csv", sep=";", header=TRUE, strip.white=TRUE) %>%
+  tibble::as_tibble()
+ttd <- read.table("./ttd.csv", sep=",", header=FALSE, strip.white=TRUE) %>%
+  tibble::as_tibble()
+
+names(ctd) <- c("lectureName", "isTechnology", "isInterdisciplinary", "isMedia", "isBiology")
+
+data <- bind_cols(ctd, ttd)
+```
+
+```{r split}
+trainingData = .7 # 70% Training Data / 30% Test Data
+dt = sort(sample(nrow(data), nrow(data) * trainingData))
+train <- data[dt,]
+test <- data[-dt,]
+```
