@@ -41,7 +41,7 @@ labels = train$isTechnology
 model <- lol.classify.nearestCentroid(features, labels)
 result <- predict(model, features_test);
 measurePrecisionRecall(result, test$isTechnology)
-
+data(“Titanic”)
 measurePrecisionRecall <- function(predict, actual_labels){
   precision <- sum(predict & actual_labels) / sum(predict)
   recall <- sum(predict & actual_labels) / sum(actual_labels)

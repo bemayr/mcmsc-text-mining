@@ -2,7 +2,9 @@
 title: "Classification"
 author: "Stefan Haböck & Bernhard Mayr"
 date: "30 11 2021"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -69,7 +71,7 @@ test.expected = data.test$isTechnology
 
 ```{r rocchio}
 model.rocchio <- lol.classify.nearestCentroid(train.features, train.labels)
-result.rocchio <- predict(model, test.data)
+result.rocchio <- predict(model.rocchio, test.data)
 
 printModelResults(result.rocchio, test.expected)
 ```
@@ -88,8 +90,6 @@ printModelResults(as.numeric(as.character(result.knn7)), test.expected)
 ```{r naïve bayes}
 data.temp <- data.train %>% select(isTechnology, 6:ncol(data.train))
 model.naivebayes <- naiveBayes(as.factor(isTechnology) ~ ., data=data.temp)
-result.naivebayes
-
 
 model.naivebayes <- naiveBayes(train.features, as.factor(train.labels))
 result.naivebayes <- predict(model.naivebayes, test.data)
@@ -97,3 +97,6 @@ result.naivebayes
 
 printModelResults(as.numeric(as.character(result.naivebayes)), test.expected)
 ```
+
+## Summery
+
